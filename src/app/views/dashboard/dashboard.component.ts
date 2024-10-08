@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { ItemDashboard } from './models/item-dashboard.model';
 import { RouterLink } from '@angular/router';
 import { NgForOf } from '@angular/common';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-dashboard',
