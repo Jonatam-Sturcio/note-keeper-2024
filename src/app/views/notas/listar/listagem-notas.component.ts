@@ -8,6 +8,7 @@ import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ListagemNota } from '../models/nota.models';
 import { NotaService } from '../services/nota.service';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-listagem-notas',
@@ -21,6 +22,7 @@ import { NotaService } from '../services/nota.service';
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
+    MatChipsModule,
   ],
   templateUrl: './listagem-notas.component.html',
   styleUrl: './listagem-notas.component.scss',

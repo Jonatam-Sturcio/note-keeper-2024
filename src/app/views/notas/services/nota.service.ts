@@ -15,27 +15,31 @@ import {
   providedIn: 'root',
 })
 export class NotaService {
-  private readonly url = `${environment.API_URL}/Notas`;
+  private readonly url = `${environment.API_URL}/notas`;
 
   constructor(private http: HttpClient) {}
 
   cadastrar(novaNota: CadastroNota): Observable<NotaCriada> {
     return this.http.post<NotaCriada>(this.url, novaNota);
   }
+
   editar(id: number, NotaEditada: EdicaoNota) {
     const urlCompleto = `${this.url}/${id}`;
     return this.http.put<NotaEditada>(urlCompleto, NotaEditada);
   }
+
   excluir(id: number) {
     const urlCompleto = `${this.url}/${id}`;
     return this.http.delete<any>(urlCompleto);
   }
+
   selecionarPorId(id: any): Observable<DetalhesNota> {
-    const urlCompleto = `${this.url}/${id}`;
+    const urlCompleto = `${this.url}?_expand=categoria`;
     return this.http.get<DetalhesNota>(urlCompleto);
   }
 
   selecionarTodos(): Observable<ListagemNota[]> {
-    return this.http.get<ListagemNota[]>(this.url);
+    const urlCompleto = `${this.url}?_expand=categoria`;
+    return this.http.get<ListagemNota[]>(urlCompleto);
   }
 }
