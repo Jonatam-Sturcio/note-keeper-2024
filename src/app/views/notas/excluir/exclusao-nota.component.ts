@@ -24,7 +24,13 @@ export class ExclusaoNotaComponent {
   ) {}
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params['id'] as number;
+    this.id = this.route.snapshot.params['id'];
+
+    if (!this.id) {
+      console.error('Não foi possível recuperar o id requisitado.');
+
+      return;
+    }
     this.nota$ = this.notaService.selecionarPorId(this.id);
   }
 

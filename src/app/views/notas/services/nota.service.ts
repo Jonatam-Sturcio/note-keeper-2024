@@ -34,7 +34,7 @@ export class NotaService {
   }
 
   selecionarPorId(id: any): Observable<DetalhesNota> {
-    const urlCompleto = `${this.url}?_expand=categoria`;
+    const urlCompleto = `${this.url}/${id}?_expand=categoria`;
     return this.http.get<DetalhesNota>(urlCompleto);
   }
 

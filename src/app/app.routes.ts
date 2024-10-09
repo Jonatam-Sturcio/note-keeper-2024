@@ -5,7 +5,7 @@ import { CadastroCategoriasComponent } from './views/categorias/cadastrar/cadast
 import { EdicaoCategoriaComponent } from './views/categorias/editar/edicao-categoria.component';
 import { ExclusaoCategoriaComponent } from './views/categorias/excluir/exclusao-categoria.component';
 import { notasRoutes } from './views/notas/notas.routes';
-import { categoriaRoutes } from './views/categorias/rotas.routes';
+import { categoriaRoutes } from './views/categorias/categorias.routes';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
