@@ -12,6 +12,12 @@
         <mat-label>Título da Categoria</mat-label>
         <input matInput formControlName="titulo" placeholder="Ex: Lazer" />
         <mat-icon matSuffix>subtitles</mat-icon>
+        <mat-error *ngIf="titulo?.invalid && (titulo?.errors)!['required']"
+          >O Titulo é obrigatorio.</mat-error
+        >
+        <mat-error *ngIf="titulo?.invalid && (titulo?.errors)!['minlength']"
+          >O Titulo precisa conter ao menos 3 caracteres.</mat-error
+        >
       </mat-form-field>
 
       <div class="row justify-content-center justify-content-md-end g-2 gap-1">

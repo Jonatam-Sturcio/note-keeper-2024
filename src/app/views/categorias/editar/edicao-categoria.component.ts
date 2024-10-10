@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,11 +12,13 @@ import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CategoriaService } from '../services/categoria.service';
 import { DetalhesCategoria, EdicaoCategoria } from '../models/categoria.models';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-edicao-categoria',
   standalone: true,
   imports: [
+    NgIf,
     RouterLink,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -31,7 +38,10 @@ export class EdicaoCategoriaComponent implements OnInit {
     private categoriaService: CategoriaService
   ) {
     this.categoriaForm = new FormGroup({
-      titulo: new FormControl(''),
+      titulo: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+      ]),
     });
   }
 
@@ -42,9 +52,17 @@ export class EdicaoCategoriaComponent implements OnInit {
       .subscribe((res) => this.carregarFormulario(res));
   }
 
+  get titulo() {
+    return this.categoriaForm.get('titulo');
+  }
+
   editar() {
+    if (this.categoriaForm.invalid) return;
+
     const categoriaEditada = this.categoriaForm.value as EdicaoCategoria;
+
     if (!this.id) return;
+
     this.categoriaService.editar(this.id, categoriaEditada).subscribe((res) => {
       console.log(`Categoria ID [${res.id}] editada com sucesso!`);
       this.router.navigate(['/categorias']);
