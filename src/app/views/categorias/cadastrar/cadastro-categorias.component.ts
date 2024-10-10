@@ -14,6 +14,7 @@ import { timeout } from 'rxjs';
 import { CadastroCategoria } from '../models/categoria.models';
 import { CategoriaService } from '../services/categoria.service';
 import { NgIf } from '@angular/common';
+import { NotificacaoService } from '../../../core/notificacao/notificacao.service';
 
 @Component({
   selector: 'app-cadastro-categorias',
@@ -34,7 +35,8 @@ export class CadastroCategoriasComponent {
 
   constructor(
     private router: Router,
-    private categoriaService: CategoriaService
+    private categoriaService: CategoriaService,
+    private notificacao: NotificacaoService
   ) {
     this.categoriaForm = new FormGroup({
       titulo: new FormControl('', [
@@ -54,7 +56,9 @@ export class CadastroCategoriasComponent {
     const novaCategoria: CadastroCategoria = this.categoriaForm.value;
 
     this.categoriaService.cadastrar(novaCategoria).subscribe((res) => {
-      console.log(`Categoria ID [${res.id}] cadastrada com sucesso!`);
+      this.notificacao.sucesso(
+        `Categoria ID [${res.id}] cadastrada com sucesso!`
+      );
       this.router.navigate(['/categorias']);
     });
   }

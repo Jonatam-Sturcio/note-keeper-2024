@@ -13,6 +13,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CategoriaService } from '../services/categoria.service';
 import { DetalhesCategoria, EdicaoCategoria } from '../models/categoria.models';
 import { NgIf } from '@angular/common';
+import { NotificacaoService } from '../../../core/notificacao/notificacao.service';
 
 @Component({
   selector: 'app-edicao-categoria',
@@ -35,7 +36,8 @@ export class EdicaoCategoriaComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private categoriaService: CategoriaService
+    private categoriaService: CategoriaService,
+    private notificacao: NotificacaoService
   ) {
     this.categoriaForm = new FormGroup({
       titulo: new FormControl('', [
@@ -64,7 +66,7 @@ export class EdicaoCategoriaComponent implements OnInit {
     if (!this.id) return;
 
     this.categoriaService.editar(this.id, categoriaEditada).subscribe((res) => {
-      console.log(`Categoria ID [${res.id}] editada com sucesso!`);
+      this.notificacao.erro(`Categoria ID [${res.id}] editada com sucesso!`);
       this.router.navigate(['/categorias']);
     });
   }
