@@ -5,21 +5,21 @@ import {
   NgSwitchCase,
   AsyncPipe,
 } from '@angular/common';
-import { Component } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { RouterLink, Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ListagemCategoria } from '../../categorias/models/categoria.models';
 import { CategoriaService } from '../../categorias/services/categoria.service';
-import { CadastroNota, DetalhesNota, NotaCriada } from '../models/nota.models';
+import { CadastroNota, DetalhesNota } from '../models/nota.models';
 import { NotaService } from '../services/nota.service';
+
 @Component({
   selector: 'app-edicao-nota',
   standalone: true,
@@ -28,8 +28,8 @@ import { NotaService } from '../services/nota.service';
     NgForOf,
     NgSwitch,
     NgSwitchCase,
-    AsyncPipe,
     RouterLink,
+    AsyncPipe,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -37,15 +37,15 @@ import { NotaService } from '../services/nota.service';
     MatButtonModule,
     MatSelectModule,
     MatCardModule,
-    MatChipsModule,
   ],
   templateUrl: './edicao-nota.component.html',
 })
-export class EdicaoNotaComponent {
+export class EdicaoNotaComponent implements OnInit {
   id?: number;
   notaForm: FormGroup;
 
   categorias$?: Observable<ListagemCategoria[]>;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -58,26 +58,62 @@ export class EdicaoNotaComponent {
       categoriaId: new FormControl<number>(0),
     });
   }
+
   ngOnInit(): void {
-    this.id = this.route.snapshot.params['id'] as number;
-    this.categorias$ = this.categoriaService.selecionarTodos();
+    this.id = this.route.snapshot.params['id'];
+
+    if (!this.id) {
+      console.error('Não foi possível recuperar o id requisitado.');
+
+      return;
+    }
+
     this.notaService
       .selecionarPorId(this.id)
       .subscribe((res) => this.carregarFormulario(res));
+
+    this.categorias$ = this.categoriaService.selecionarTodos();
   }
-  editar() {
-    if (!this.id) return;
-    const notaEditada = this.notaForm.value as CadastroNota;
+
+  editar(): void {
+    if (!this.id) {
+      console.error('Não foi possível recuperar o id requisitado.');
+
+      return;
+    }
+
+    const notaEditada: CadastroNota = this.notaForm.value;
+
     this.notaService.editar(this.id, notaEditada).subscribe((res) => {
-      console.log(`Nota ID [${res.id}] editada com sucesso!`);
+      console.log(`O registro ID [${res.id}] foi editado com sucesso!`);
+
       this.router.navigate(['/notas']);
     });
   }
+
+  campoNaoFoiTocado(campo: string): boolean {
+    const controle = this.notaForm.get(campo);
+
+    if (!controle) return false;
+
+    return controle.pristine;
+  }
+
+  mapearTituloDaCategoria(id: number, categorias: ListagemCategoria[]): string {
+    const categoria = categorias.find((categoria) => categoria.id === id);
+
+    return categoria ? categoria.titulo : 'Categoria não encontrada';
+  }
+
   private carregarFormulario(registro: DetalhesNota) {
     this.notaForm.patchValue(registro);
-    Object.keys(this.notaForm.controls).forEach((campo) => {
-      const control = this.notaForm.get(campo);
-      control?.markAsDirty();
-    });
+
+    const campos = Object.keys(this.notaForm.controls);
+
+    for (let campo of campos) {
+      const controle = this.notaForm.get(campo);
+
+      controle?.markAsDirty();
+    }
   }
 }
