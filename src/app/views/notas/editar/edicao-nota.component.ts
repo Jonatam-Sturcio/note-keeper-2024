@@ -6,7 +6,12 @@ import {
   AsyncPipe,
 } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,6 +24,7 @@ import { ListagemCategoria } from '../../categorias/models/categoria.models';
 import { CategoriaService } from '../../categorias/services/categoria.service';
 import { CadastroNota, DetalhesNota } from '../models/nota.models';
 import { NotaService } from '../services/nota.service';
+import { NotificacaoService } from '../../../core/notificacao/notificacao.service';
 
 @Component({
   selector: 'app-edicao-nota',
@@ -50,12 +56,16 @@ export class EdicaoNotaComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private notaService: NotaService,
-    private categoriaService: CategoriaService
+    private categoriaService: CategoriaService,
+    private notificacao: NotificacaoService
   ) {
     this.notaForm = new FormGroup({
-      titulo: new FormControl<string>(''),
-      conteudo: new FormControl<string>(''),
-      categoriaId: new FormControl<number>(0),
+      titulo: new FormControl<string>('', [
+        Validators.required,
+        Validators.minLength(3),
+      ]),
+      conteudo: new FormControl<string>('', [Validators.required]),
+      categoriaId: new FormControl<number>(0, [Validators.required]),
     });
   }
 
@@ -63,7 +73,7 @@ export class EdicaoNotaComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
 
     if (!this.id) {
-      console.error('Não foi possível recuperar o id requisitado.');
+      this.notificacao.erro('Não foi possível recuperar o id requisitado.');
 
       return;
     }
@@ -77,7 +87,7 @@ export class EdicaoNotaComponent implements OnInit {
 
   editar(): void {
     if (!this.id) {
-      console.error('Não foi possível recuperar o id requisitado.');
+      this.notificacao.erro('Não foi possível recuperar o id requisitado.');
 
       return;
     }
@@ -85,10 +95,22 @@ export class EdicaoNotaComponent implements OnInit {
     const notaEditada: CadastroNota = this.notaForm.value;
 
     this.notaService.editar(this.id, notaEditada).subscribe((res) => {
-      console.log(`O registro ID [${res.id}] foi editado com sucesso!`);
+      this.notificacao.sucesso(
+        `O registro ID [${res.id}] foi editado com sucesso!`
+      );
 
       this.router.navigate(['/notas']);
     });
+  }
+
+  get titulo() {
+    return this.notaForm.get('titulo');
+  }
+  get conteudo() {
+    return this.notaForm.get('conteudo');
+  }
+  get categoriaId() {
+    return this.notaForm.get('categoriaId');
   }
 
   campoNaoFoiTocado(campo: string): boolean {
