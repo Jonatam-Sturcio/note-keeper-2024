@@ -121,6 +121,13 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {
+            "baseHref": "https://Jonatam-Sturcio.github.io/note-keeper-2024/",
+            "repo": "https://github.com/Jonatam-Sturcio/note-keeper-2024.git"
+          }
         }
       }
     }
