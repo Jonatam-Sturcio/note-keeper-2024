@@ -9,7 +9,7 @@ import {
   EdicaoCategoria,
   ListagemCategoria,
 } from '../models/categoria.models';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

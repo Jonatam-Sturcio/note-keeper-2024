@@ -9,7 +9,7 @@ import {
   EdicaoNota,
   ListagemNota,
 } from '../models/nota.models';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
