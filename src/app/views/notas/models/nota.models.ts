@@ -42,4 +42,5 @@ export interface DetalhesNota {
   conteudo: string;
   categoriaId: number;
   categoria: ListagemCategoria;
+  arquivada: boolean;
 }

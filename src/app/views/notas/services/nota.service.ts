@@ -42,4 +42,9 @@ export class NotaService {
     const urlCompleto = `${this.url}?_expand=categoria`;
     return this.http.get<ListagemNota[]>(urlCompleto);
   }
+
+  selecionarArquivadas(): Observable<ListagemNota[]> {
+    const urlCompleto = `${this.url}?arquivada=true&_expand=categoria`;
+    return this.http.get<ListagemNota[]>(urlCompleto);
+  }
 }

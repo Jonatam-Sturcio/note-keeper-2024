@@ -40,7 +40,18 @@ export class ExclusaoNotaComponent {
     if (!this.id) return;
     this.notaService.excluir(this.id).subscribe((res) => {
       this.notificacao.sucesso(`Nota ID [${this.id}] excluída com sucesso!`);
-      this.router.navigate(['/notas']);
+    });
+
+    this.nota$?.subscribe((obj) => {
+      if (obj.arquivada) this.router.navigate(['/notas/arquivadas']);
+      else this.router.navigate(['/notas']);
+    });
+  }
+
+  voltar() {
+    this.nota$?.subscribe((obj) => {
+      if (obj.arquivada) this.router.navigate(['/notas/arquivadas']);
+      else this.router.navigate(['/notas']);
     });
   }
 }

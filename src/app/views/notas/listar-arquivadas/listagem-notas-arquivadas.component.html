@@ -1,31 +1,23 @@
 <main class="container my-4">
-  <h1 class="fs-2">Listagem de Notas</h1>
+  <h1 class="fs-2">Listagem de Notas Arquivadas</h1>
 
   <section
     aria-label="Opções"
-    class="row justify-content-center justify-content-lg-start g-1 gap-3"
+    class="row justify-content-center justify-content-lg-start g-1"
   >
     <a
       mat-flat-button
       class="col-md-6 col-lg-4 col-xxl-2 fs-6 py-4"
-      [routerLink]="['/notas', 'cadastrar']"
+      [routerLink]="['/notas']"
     >
-      <mat-icon>bookmark_add</mat-icon>
-      Cadastrar
-    </a>
-    <a
-      mat-stroked-button
-      class="col-md-6 col-lg-4 col-xxl-2 fs-6 py-4 botao-arquivada"
-      [routerLink]="['/notas', 'arquivadas']"
-    >
-      <mat-icon>inventory_2</mat-icon>
-      Notas Arquivadas
+      <mat-icon>arrow_back</mat-icon>
+      Voltar
     </a>
   </section>
 
   <hr />
 
-  <div class="row g-3 mt-2">
+  <div *ngIf="notasEmCache.length > 0" class="row g-3 mt-2">
     <mat-chip-listbox *ngIf="categorias$ | async as categorias">
       <mat-chip-option (click)="filtrar()">Todas as Notas</mat-chip-option>
       <mat-chip-option
@@ -35,10 +27,13 @@
       >
     </mat-chip-listbox>
   </div>
+  <div *ngIf="notasEmCache.length < 1" class="d-flex justify-content-center">
+    <h4 class="fs-3">Não há notas arquivadas!</h4>
+  </div>
 
   <div *ngIf="notas$ | async as itens" class="row g-3 mt-2">
     <ng-container *ngFor="let item of itens">
-      <div *ngIf="!item.arquivada" class="col-md-6 col-lg-4">
+      <div *ngIf="item.arquivada" class="col-md-6 col-lg-4">
         <mat-card
           class="card-animado mat-mdc-elevation-specific mat-elevation-z3 h-100"
         >
@@ -57,19 +52,11 @@
           <mat-card-footer class="d-flex justify-content-end gap-1 p-3 mt-auto">
             <a
               mat-icon-button
-              class="botao-editar"
-              matTooltip="Editar {{ item.titulo }}"
-              [routerLink]="['/notas', 'editar', item.id]"
+              class="botao-desarquivar"
+              matTooltip="Desarquivar {{ item.titulo }}"
+              (click)="desarquivar(item)"
             >
-              <mat-icon>edit</mat-icon>
-            </a>
-            <a
-              mat-icon-button
-              class="botao-arquivar"
-              matTooltip="Arquivar {{ item.titulo }}"
-              (click)="arquivar(item)"
-            >
-              <mat-icon>archive</mat-icon>
+              <mat-icon>unarchive</mat-icon>
             </a>
             <a
               mat-icon-button
