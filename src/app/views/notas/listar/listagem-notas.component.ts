@@ -6,11 +6,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { ListagemNota } from '../models/nota.models';
+import {
+  CadastroNota,
+  DetalhesNota,
+  EdicaoNota,
+  ListagemNota,
+} from '../models/nota.models';
 import { NotaService } from '../services/nota.service';
 import { MatChipsModule } from '@angular/material/chips';
 import { CategoriaService } from '../../categorias/services/categoria.service';
 import { ListagemCategoria } from '../../categorias/models/categoria.models';
+import { NotificacaoService } from '../../../core/notificacao/notificacao.service';
 
 @Component({
   selector: 'app-listagem-notas',
@@ -37,7 +43,8 @@ export class ListagemNotasComponent implements OnInit {
 
   constructor(
     private notaService: NotaService,
-    private categoriaService: CategoriaService
+    private categoriaService: CategoriaService,
+    private notificacao: NotificacaoService
   ) {
     this.notasEmCache = [];
   }
@@ -58,6 +65,16 @@ export class ListagemNotasComponent implements OnInit {
     );
 
     this.notas$ = of(notasFiltradas);
+  }
+
+  arquivar(nota: ListagemNota) {
+    nota.arquivada = true;
+
+    this.notaService.editar(nota.id, nota).subscribe((res) => {
+      this.notificacao.sucesso(
+        `O registro ID [${res.id}] foi arquivado com sucesso!`
+      );
+    });
   }
 
   private obterNovasFiltradas(notas: ListagemNota[], categoriaId?: number) {

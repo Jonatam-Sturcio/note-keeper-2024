@@ -4,6 +4,7 @@ export interface CadastroNota {
   titulo: string;
   conteudo: string;
   categoriaId: number;
+  arquivada: boolean;
 }
 
 export interface NotaCriada {
@@ -32,6 +33,7 @@ export interface ListagemNota {
   conteudo: string;
   categoriaId: number;
   categoria: ListagemCategoria;
+  arquivada: boolean;
 }
 
 export interface DetalhesNota {
